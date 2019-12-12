@@ -65,12 +65,9 @@ class List:
         self.head = Node(None, None)
         self.tail = self.head
 
-    def print(self):
-        node = self.head.next
-        while node is not None:
-            print(node.data)
-            node = node.next
-
+    
+    
+    
 # TEST
 #
 # list1 = List()
