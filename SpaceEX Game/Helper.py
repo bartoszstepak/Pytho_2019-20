@@ -1,9 +1,9 @@
 import math
 
 
-def isCollision(x1, y1, x2, y2, object_size):
+def isCollision(x1, y1, x2, y2, dist):
     distance = getDistance(x1+30, y1, x2, y2)
-    if distance < 30:
+    if distance < dist:
         return True
     else:
         return False

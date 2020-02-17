@@ -5,6 +5,7 @@ import Helper
 from Player import Player
 from Enemy import Enemy
 from Bullet import Bullet
+from pygame import mixer
 
 
 pygame.init()
@@ -33,7 +34,7 @@ bullet = None
 
 
 def init_player():
-    return Player(350, 500, screenWidth - 85, screenHeigth - 85, 6, 4)
+    return Player(350, 500, screenWidth - 85, screenHeigth - 85, 6, 1)
 
 
 def init_enemies(x):
@@ -61,10 +62,12 @@ def move_enemies():
     for enemy in enemies:
         enemy.move()
         isShotted = Helper.isCollision(enemy.possitionX, enemy.possitionY, bullet.possitionX, bullet.possitionY,
-                                       enemy.size)
+                                       30)
         draw_object(enemy.img, enemy.possitionX, enemy.possitionY)
 
         if isShotted:
+            explosionSound = mixer.Sound("explosion.wav")
+            explosionSound.play()
             index = enemies.index(enemy)
             enemies.pop(index)
             player.score += 1
@@ -72,8 +75,10 @@ def move_enemies():
 
         isKilledByEnemy = Helper.isCollision(enemy.possitionX, enemy.possitionY, player.possitionX,
                                              player.possitionY,
-                                             enemy.size)
+                                             60)
         if isKilledByEnemy:
+            explosionSound = mixer.Sound("explosion.wav")
+            explosionSound.play()
             player.kill()
 
         if enemy.possitionY > 550:
@@ -84,6 +89,9 @@ def move_enemies():
 
 
 def fire_bullet():
+    if bullet.fired is False:
+        bulletSound = mixer.Sound("laser.wav")
+        bulletSound.play()
     bullet.fire(player.possitionX, player.possitionY)
     bullet.possitionY -= bullet.speed
     draw_object(bullet.img, bullet.possitionX, bullet.possitionY)
@@ -116,6 +124,8 @@ def check_win():
 
 
 def game_over():
+    player.stop()
+
     game_over_label = bigFont.render("GAME OVER", 1, (255, 255, 255))
     restart_label = smallFont.render("Press F1 to resrt", 1, (255, 255, 255))
 
@@ -168,6 +178,9 @@ def game_menu():
     exitBTNRect = pygame.Rect((exitBTNX, exitBTNY), (200, 50))
     screen.blit(exitBTN, (exitBTNX, exitBTNY))
 
+    label = bigFont.render("SpaceEX Game", 1, (255, 255, 255))
+    screen.blit(label, (180, 470))
+
     pygame.display.flip()
 
     while runningMenuLoop:
@@ -183,12 +196,13 @@ def game_menu():
                  exit()
 
 
-
-
 def game_loop():
     global runningGameLoop
     runningGameLoop = True
     init_game()
+
+    mixer.music.load("background.wav")
+    mixer.music.play(-1)
 
     while runningGameLoop:
 

@@ -16,6 +16,7 @@ class Player:
         self.maxY = maxY
         self.score = 0;
         self.img = pygame.image.load('musk.png')
+        self.canMove = True
 
 
     def move_right(self):
@@ -41,13 +42,20 @@ class Player:
             self.moveUp = 0
 
     def updateMoves(self):
-        self.possitionX += self.moveRight
-        self.possitionX += self.moveLeft
-        self.possitionY += self.moveUp
-        self.possitionY += self.moveDown
+        if self.canMove:
+            self.possitionX += self.moveRight
+            self.possitionX += self.moveLeft
+            self.possitionY += self.moveUp
+            self.possitionY += self.moveDown
 
         self.possitionX = self.update_possition_if_out_of_border(self.possitionX, self.maxX)
         self.possitionY = self.update_possition_if_out_of_border(self.possitionY, self.maxY)
+
+    def stop(self):
+        self.canMove = False
+
+    def go(self):
+        self.canMove = True
 
     def update_possition_if_out_of_border(self, possition, max):
         if possition < 0:
